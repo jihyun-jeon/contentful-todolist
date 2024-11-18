@@ -1,17 +1,22 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { userItemType } from "../../type/user";
 import { useGetUsers } from "../../hook/useUsers";
-import { authDuration } from "../../shared/constants";
+import { useAuth } from "./AuthGuard";
 
 function Login() {
   const [userData, setUserData] = useState({ email: "", password: "" });
-  const navigate = useNavigate();
 
-  const { data: userList } = useGetUsers();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { setAuth } = useAuth()
+
+  const users = useGetUsers();
+
+  const from = location.state?.from?.pathname || "/todolist";
 
   const onLogin = () => {
-    const foundUser = userList?.items.find(({ fields }: userItemType) => {
+    const foundUser = users.data?.items.find(({ fields }: userItemType) => {
       const { email, password } = fields;
 
       return (
@@ -20,14 +25,10 @@ function Login() {
       );
     });
 
+
     if (foundUser) {
-      const currentTiem = new Date().getTime();
-      const authData = JSON.stringify({
-        expireAt: currentTiem + authDuration,
-        id: foundUser.sys.id,
-      });
-      localStorage.setItem("userAuthInfo", authData);
-      navigate("/todolist"); // [질문] /todolis 경로 하드코딩 말고 방법이 있는지?
+      setAuth(foundUser.sys.id);
+      navigate(from); // [질문] /todolis 경로 하드코딩 말고 방법이 있는지?
     }
   };
 

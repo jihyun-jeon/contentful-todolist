@@ -12,10 +12,10 @@ import {
 import { createTodoType } from "../type/todo";
 
 // <GET - 리스트>
-export const useGetTodos = (USER_ID: string) => {
+export const useGetTodos = (USER_ID?: string | null) => {
   const params = {
     content_type: "todoItem",
-    "fields.user.sys.id": USER_ID,
+    "fields.user.sys.id": USER_ID ?? '',
   };
   return useQuery({
     queryFn: () => {

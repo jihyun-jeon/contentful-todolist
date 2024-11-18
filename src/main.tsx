@@ -8,17 +8,18 @@ import Login from "./pages/auth/Login.tsx";
 import TodoList from "./pages/todolist/TodoList.tsx";
 import { AuthProvider } from "./pages/auth/AuthGuard.tsx";
 import { queryClient } from "./shared/quertClient.ts";
+import { RequireAuth } from "./shared/RequiredAuth.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <AuthProvider>
         <Routes>
           <Route path="/" element={<Login />}></Route>
-          <Route path="/todolist" element={<TodoList />}></Route>
+          <Route path="/todolist" element={<RequireAuth><TodoList /></RequireAuth>}></Route>
         </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+      </AuthProvider>
+    </BrowserRouter>
     <ReactQueryDevtools initialIsOpen={false} />
   </QueryClientProvider>
 );
