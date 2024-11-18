@@ -27,7 +27,7 @@ export const postTodo = async (formData: createTodoType) => {
     fields: res.fields,
   };
 
-  await CMA_CLIENT.entry.publish({ entryId: res.sys.id }, rawData);
+  return CMA_CLIENT.entry.publish({ entryId: res.sys.id }, rawData);
 };
 
 //  <4. 완료여부 변경 fetcher 분리>
@@ -56,7 +56,7 @@ export const patchTodo = async (
     fields: res.fields,
   };
 
-  await CMA_CLIENT.entry.publish({ entryId: res.sys.id }, rawData);
+  return CMA_CLIENT.entry.publish({ entryId: res.sys.id }, rawData);
 };
 
 //  <5. todo 삭제 fetcher>
@@ -69,11 +69,11 @@ export const deleteTodo = async (entryId: string) => {
     fields: res.fields,
   };
 
-  await CMA_CLIENT.entry.publish({ entryId: res.sys.id }, rawData);
+  return CMA_CLIENT.entry.publish({ entryId: res.sys.id }, rawData);
 };
 
 export const TodoQuery = {
-  all: ["todo"],
-  getMany: (todoQuery: getUserListType) => [...TodoQuery.all, todoQuery],
-  // getOne: (todo: unknown) => [...TodoQuery.all, todo],
+  root: ["todo"],
+  getMany: (todoQuery: getUserListType) => [...TodoQuery.root, 'getMany', todoQuery],
+  getOne: (id: string) => [...TodoQuery.root, 'getOne', id],
 };
