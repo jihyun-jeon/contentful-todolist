@@ -49,8 +49,7 @@ export const useUpdateIsDone = () => {
       isChecked: boolean;
     }) => {
       // [질문] 왜 TodoList 컴포넌트에서 get요청 후 patch 요청 따로 커스텀훅으로 처리 하는건 오류가 났는지? / 개선 : get-patch 한번에 처리
-      const res = await getTodo(entryId);
-      await patchTodo(entryId, res.sys.version, isChecked);
+      await patchTodo(entryId, isChecked);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: TodoQuery.all });
