@@ -62,10 +62,10 @@ export const useDeleteTodo = () => {
     mutationFn: (entryId: string) => {
       return deleteTodo(entryId);
     },
-    onSuccess: (res) => {
+    onSuccess: (entryId) => {
       queryClient.invalidateQueries({ queryKey: TodoQuery.root });
-      queryClient.removeQueries({ queryKey: TodoQuery.getOne(res.sys.id) });
-    },
+      queryClient.removeQueries({ queryKey: TodoQuery.getOne(entryId) });
+    }
   });
 };
 

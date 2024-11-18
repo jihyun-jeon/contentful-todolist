@@ -62,14 +62,8 @@ export const patchTodo = async (
 //  <5. todo 삭제 fetcher>
 export const deleteTodo = async (entryId: string) => {
   await CMA_CLIENT.entry.unpublish({ entryId });
-  const res = await CMA_CLIENT.entry.delete({ entryId });
-
-  const rawData = {
-    sys: res.sys,
-    fields: res.fields,
-  };
-
-  return CMA_CLIENT.entry.publish({ entryId: res.sys.id }, rawData);
+  await CMA_CLIENT.entry.delete({ entryId });
+  return entryId;
 };
 
 export const TodoQuery = {

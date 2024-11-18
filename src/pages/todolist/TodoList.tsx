@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Logout from "../auth/Logout";
 import InsertForm from "./components/InsertForm";
 import { todoItemType } from "../../type/todo";
@@ -21,8 +21,8 @@ import { Navigate } from "react-router-dom";
 // 처음 초기값으로 1번, isAuthenticated값 바뀌면 2번, userId값 바뀌면 3번
 
 function TodoList() {
-  const { mutate: isDoneMutate } = useUpdateIsDone();
-  const { mutate: deleteMutate } = useDeleteTodo();
+  const updateTodo = useUpdateIsDone();
+  const deleteTodo = useDeleteTodo();
 
   const { checkAuth, isAuthenticated, userId } = useAuth();
   const { data: TodoDatas, isLoading } = useGetTodos(userId);
@@ -42,11 +42,11 @@ function TodoList() {
   ) => {
     const isChecked = e.target.checked;
 
-    isDoneMutate({ entryId: entryId, isChecked });
+    updateTodo.mutate({ entryId: entryId, isChecked });
   };
 
   const onDelete = (entryId: string) => {
-    deleteMutate(entryId);
+    deleteTodo.mutate(entryId);
   };
 
   return (
