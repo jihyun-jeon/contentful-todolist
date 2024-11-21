@@ -9,12 +9,23 @@ interface AuthContextType {
   checkAuth: () => void;
   userId: string | null;
 }
-const AuthContext = createContext<AuthContextType | null>(null);
+
+let initialValue: AuthContextType | null = null;
+
+try {
+  initialValue = JSON.parse(localStorage.getItem("userAuthInfo") ?? '"null"');
+} catch {
+  //
+}
+
+const AuthContext = createContext<AuthContextType | null>(initialValue);
 
 // context api 생성
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userId, setUserId] = useState<null | string>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(!!initialValue);
+  const [userId, setUserId] = useState<null | string>(
+    initialValue?.userId ?? null
+  );
 
   const checkAuth = () => {
     const getInfo = JSON.parse(localStorage.getItem("userAuthInfo"));
