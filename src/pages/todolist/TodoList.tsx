@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Logout from "../auth/Logout";
 import InsertForm from "./components/InsertForm";
 import { todoItemType } from "../../type/todo";
@@ -8,7 +8,6 @@ import {
   useUpdateIsDone,
 } from "../../hook/useTodos";
 import { useAuth } from "../auth/AuthGuard";
-import { Navigate } from "react-router-dom";
 
 // 1. 앱 처음 실행 > Context api 초기값으로 읽히고 > Todolist 읽힘
 // 이떈, isAuthenticated값 false , userId값 null
@@ -24,17 +23,8 @@ function TodoList() {
   const updateTodo = useUpdateIsDone();
   const deleteTodo = useDeleteTodo();
 
-  const { checkAuth, isAuthenticated, userId } = useAuth();
-  const { data: TodoDatas, isLoading } = useGetTodos(userId);
-
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
-
-  if (!isAuthenticated) {
-    // navigate("/", { replace: true }); // [질문] useNavigate 는 왜 안되는지?
-    return <Navigate to="/" replace={true} />;
-  }
+  const { userId } = useAuth();
+  const todos = useGetTodos(userId); // [TODO] userId가 null 일 수도있어 타입 에러
 
   const onChecked = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -56,7 +46,7 @@ function TodoList() {
       <hr />
       <h3> TodoList</h3>
       <ul>
-        {TodoDatas?.items.map(({ fields, sys }: todoItemType) => {
+        {todos.data?.items.map(({ fields, sys }: todoItemType) => {
           const { title, content } = fields;
           return (
             <li
