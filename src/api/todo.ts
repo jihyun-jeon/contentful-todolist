@@ -31,15 +31,13 @@ export const postTodo = async (formData: createTodoType) => {
 };
 
 //  <4. 완료여부 변경 fetcher 분리>
-export const patchTodo = async (
-  entryId: string,
-  version: number,
-  isChecked: boolean
-) => {
+export const patchTodo = async (entryId: string, isChecked: boolean) => {
+  const entry = await getTodo(entryId);
+
   const res = await CMA_CLIENT.entry.patch(
     {
       entryId,
-      version,
+      version: entry.sys.version,
     },
     [
       {
