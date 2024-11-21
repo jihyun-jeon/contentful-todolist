@@ -41,17 +41,17 @@ export const useGetTodo = (entryId: string) => {
 // <PUT - 완료여부 수정>
 export const useUpdateIsDone = () => {
   return useMutation({
-    mutationFn: async ({
+    mutationFn: ({
       entryId,
       isChecked,
     }: {
       entryId: string;
       isChecked: boolean;
     }) => {
-      await patchTodo(entryId, isChecked);
+      return patchTodo(entryId, isChecked);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: TodoQuery.all });
+      queryClient.invalidateQueries({ queryKey: TodoQuery.root });
     },
   });
 };
@@ -60,10 +60,11 @@ export const useUpdateIsDone = () => {
 export const useDeleteTodo = () => {
   return useMutation({
     mutationFn: (entryId: string) => {
-      return deleteTodo(entryId);
+      return deleteTodo(entryId); // mutationFn 함수는 프로미스를 반환해야 한다.
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: TodoQuery.all });
+    onSuccess: (res) => {
+      queryClient.invalidateQueries({ queryKey: TodoQuery.root });
+      queryClient.removeQueries({ queryKey: TodoQuery.getOne(res.sys.id) });
     },
   });
 };
@@ -71,11 +72,11 @@ export const useDeleteTodo = () => {
 // < POST - todo등록 >
 export const useAddTodo = () => {
   return useMutation({
-    mutationFn: async (data: createTodoType) => {
-      await postTodo(data);
+    mutationFn: (data: createTodoType) => {
+      return postTodo(data);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: TodoQuery.all });
+      queryClient.invalidateQueries({ queryKey: TodoQuery.root });
     },
   });
 };

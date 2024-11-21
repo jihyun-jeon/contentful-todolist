@@ -27,7 +27,9 @@ export const postTodo = async (formData: createTodoType) => {
     fields: res.fields,
   };
 
-  await CMA_CLIENT.entry.publish({ entryId: res.sys.id }, rawData);
+  return CMA_CLIENT.entry.publish({ entryId: res.sys.id }, rawData);
+  // [1] mutationFn은 비동기 작업을 처리하는 함수인데, Promise를 반환해야 한다.
+  // [2] 단순히 Promise를 반환하는 거여서 await가 불필요,  await 뒤에 기다렸다 실행되야하는 로직이 없어서 더욱이 불필요
 };
 
 //  <4. 완료여부 변경 fetcher 분리>
@@ -53,7 +55,7 @@ export const patchTodo = async (entryId: string, isChecked: boolean) => {
     fields: res.fields,
   };
 
-  await CMA_CLIENT.entry.publish({ entryId: res.sys.id }, rawData);
+  return CMA_CLIENT.entry.publish({ entryId: res.sys.id }, rawData);
 };
 
 //  <5. todo 삭제 fetcher>
@@ -66,11 +68,15 @@ export const deleteTodo = async (entryId: string) => {
     fields: res.fields,
   };
 
-  await CMA_CLIENT.entry.publish({ entryId: res.sys.id }, rawData);
+  return CMA_CLIENT.entry.publish({ entryId: res.sys.id }, rawData);
 };
 
 export const TodoQuery = {
-  all: ["todo"],
-  getMany: (todoQuery: getUserListType) => [...TodoQuery.all, todoQuery],
-  // getOne: (todo: unknown) => [...TodoQuery.all, todo],
+  root: ["todo"],
+  getMany: (todoQuery: getUserListType) => [
+    ...TodoQuery.root,
+    "getMany",
+    todoQuery,
+  ],
+  getOne: (id: string) => [...TodoQuery.root, "getOne", id],
 };
