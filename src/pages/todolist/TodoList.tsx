@@ -1,13 +1,13 @@
 import React from "react";
-import Logout from "../auth/Logout";
-import InsertForm from "./components/InsertForm";
-import { todoItemType } from "../../type/todo";
+import { Logout } from "@/widgets/Auth";
 import {
   useDeleteTodo,
   useGetTodos,
   useUpdateIsDone,
-} from "../../hook/useTodos";
-import { useAuth } from "../auth/AuthGuard";
+} from "@/entities/Todo";
+import { useAuth } from "@/shared/components/AuthProvider";
+import { InsertForm } from "@/widgets/Todo";
+
 
 // 1. 앱 처음 실행 > Context api 초기값으로 읽히고 > Todolist 읽힘
 // 이떈, isAuthenticated값 false , userId값 null
@@ -46,7 +46,7 @@ function TodoList() {
       <hr />
       <h3> TodoList</h3>
       <ul>
-        {todos.data?.items.map(({ fields, sys }: todoItemType) => {
+        {todos.data?.items.map(({ fields, sys }) => {
           const { title, content } = fields;
           return (
             <li

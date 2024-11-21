@@ -1,6 +1,7 @@
-import { Navigate, useLocation } from "react-router-dom";
-import { useAuth } from "../pages/auth/AuthGuard";
 import { PropsWithChildren } from "react";
+import { Navigate, useLocation } from "react-router-dom";
+
+import { useAuth } from "./AuthProvider";
 
 export const RequireAuth = ({ children }: PropsWithChildren) => {
   const auth = useAuth();

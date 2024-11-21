@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { getUsers, UserQuery } from "../api/user";
+import { getUsers } from "./fetchers";
+import { getUsersType } from "../model/types";
 
 export const useGetUsers = () => {
   return useQuery({
@@ -8,4 +9,9 @@ export const useGetUsers = () => {
     },
     queryKey: UserQuery.getMany({ content_type: "user" }),
   });
+};
+
+export const UserQuery = {
+  all: ["user"],
+  getMany: (userQuery: getUsersType) => [UserQuery.all, userQuery],
 };

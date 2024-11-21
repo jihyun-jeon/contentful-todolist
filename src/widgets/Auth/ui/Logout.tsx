@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-const Logout = () => {
+export const Logout = () => {
   const navigate = useNavigate();
   const onLogout = () => {
     localStorage.removeItem("userAuthInfo"); // context Api [TODO]
@@ -12,5 +12,3 @@ const Logout = () => {
     </div>
   );
 };
-
-export default Logout;

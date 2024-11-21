@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { useAddTodo } from "../../../hook/useTodos";
-import { useAuth } from "../../auth/AuthGuard";
+import { useAddTodo } from "@/entities/Todo";
+import { useAuth } from "@/shared/components/AuthProvider";
 
 const INIT_FORMDATA = { title: "", content: "" };
 
-function InsertForm() {
+export function InsertForm() {
   const [formData, setFormData] = useState(INIT_FORMDATA);
   const { mutate: addTodoMutate } = useAddTodo();
 
@@ -81,4 +81,3 @@ function InsertForm() {
   );
 }
 
-export default InsertForm;

@@ -1,15 +1,14 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 
-import { queryClient } from "../shared/quertClient";
 import {
   deleteTodo,
   getTodo,
   getTodos,
   patchTodo,
   postTodo,
-  TodoQuery,
-} from "../api/todo";
-import { createTodoType } from "../type/todo";
+} from "./fetchers";
+import { createTodoType, getUserListType } from "../model/types";
+import { queryClient } from "@/shared/quertClient";
 
 // <GET - 리스트>
 export const useGetTodos = (USER_ID?: string | null) => {
@@ -79,4 +78,10 @@ export const useAddTodo = () => {
       queryClient.invalidateQueries({ queryKey: TodoQuery.root });
     },
   });
+};
+
+export const TodoQuery = {
+  root: ["todo"],
+  getMany: (todoQuery?: getUserListType) => [...TodoQuery.root, 'getMany', todoQuery],
+  getOne: (id: string) => [...TodoQuery.root, 'getOne', id],
 };

@@ -1,5 +1,5 @@
-import { CMA_CLIENT } from "../shared/contentful";
-import { createTodoType, getUserListType } from "../type/todo";
+import { CMA_CLIENT } from "@/shared/contentful";
+import { createTodoType, getUserListType } from "../model/types";
 
 //  <1. 리스트 조회 get fether>
 export const getTodos = (params?: getUserListType) => {
@@ -64,10 +64,4 @@ export const deleteTodo = async (entryId: string) => {
   await CMA_CLIENT.entry.unpublish({ entryId });
   await CMA_CLIENT.entry.delete({ entryId });
   return entryId;
-};
-
-export const TodoQuery = {
-  root: ["todo"],
-  getMany: (todoQuery?: getUserListType) => [...TodoQuery.root, 'getMany', todoQuery],
-  getOne: (id: string) => [...TodoQuery.root, 'getOne', id],
 };

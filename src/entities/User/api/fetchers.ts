@@ -1,5 +1,4 @@
-import { CMA_CLIENT } from "../shared/contentful";
-import { getUsersType } from "../type/user";
+import { CMA_CLIENT } from "@/shared/contentful";
 
 // <fether만 분리>
 export const getUsers = () => {
@@ -10,7 +9,3 @@ export const getUsers = () => {
     .then((res) => res);
 };
 
-export const UserQuery = {
-  all: ["user"],
-  getMany: (userQuery: getUsersType) => [UserQuery.all, userQuery],
-};

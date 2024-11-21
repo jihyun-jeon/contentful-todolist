@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { userItemType } from "../../type/user";
-import { useGetUsers } from "../../hook/useUsers";
-import { useAuth } from "./AuthGuard";
+
+import { useGetUsers } from "@/entities/User";
+import { useAuth } from "@/shared/components/AuthProvider";
 
 function Login() {
   const [userData, setUserData] = useState({ email: "", password: "" });
@@ -16,7 +16,7 @@ function Login() {
   const from = location.state?.from?.pathname || "/todolist";
 
   const onLogin = () => {
-    const foundUser = users.data?.items.find(({ fields }: userItemType) => {
+    const foundUser = users.data?.items.find(({ fields }) => {
       const { email, password } = fields;
 
       return (

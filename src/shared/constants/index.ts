@@ -1,1 +1,1 @@
-export const authDuration = 3600000; // 1시간 // 36000 1분 (
+export const authDuration = 3_600_000; // 1시간 // 36000 1분 (

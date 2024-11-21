@@ -6,9 +6,10 @@ import { QueryClientProvider } from "@tanstack/react-query";
 
 import Login from "./pages/auth/Login.tsx";
 import TodoList from "./pages/todolist/TodoList.tsx";
-import { AuthProvider } from "./pages/auth/AuthGuard.tsx";
-import { queryClient } from "./shared/quertClient.ts";
-import { RequireAuth } from "./shared/RequiredAuth.tsx";
+
+import { AuthProvider } from "@/shared/components/AuthProvider";
+import { queryClient } from "@/shared/quertClient";
+import { RequireAuth } from "@/shared/components/RequiredAuth";
 
 createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>

@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { authDuration } from "../../shared/constants";
+
+import { authDuration } from "@/shared/constants";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -16,7 +17,7 @@ let initialValue: UserAuthInfo | null = null
 try {
   // TODO: 여기 초기값 만들 때. expireAt 검사 필요
   initialValue = JSON.parse(localStorage.getItem("userAuthInfo") ?? 'null');
-} catch { }
+} catch { /* empty */ }
 
 interface AuthContextType {
   userId: string | null;
