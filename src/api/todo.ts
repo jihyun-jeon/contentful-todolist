@@ -28,8 +28,7 @@ export const postTodo = async (formData: createTodoType) => {
   };
 
   return CMA_CLIENT.entry.publish({ entryId: res.sys.id }, rawData);
-  // [1] mutationFn은 비동기 작업을 처리하는 함수인데, Promise를 반환해야 한다.
-  // [2] 단순히 Promise를 반환하는 거여서 await가 불필요,  await 뒤에 기다렸다 실행되야하는 로직이 없어서 더욱이 불필요
+  // 단순히 Promise를 반환하는 거여서 await가 불필요,  await 뒤에 기다렸다 실행되야하는 로직이 없어서 더욱이 불필요
 };
 
 //  <4. 완료여부 변경 fetcher 분리>
@@ -61,14 +60,8 @@ export const patchTodo = async (entryId: string, isChecked: boolean) => {
 //  <5. todo 삭제 fetcher>
 export const deleteTodo = async (entryId: string) => {
   await CMA_CLIENT.entry.unpublish({ entryId });
-  const res = await CMA_CLIENT.entry.delete({ entryId });
-
-  const rawData = {
-    sys: res.sys,
-    fields: res.fields,
-  };
-
-  return CMA_CLIENT.entry.publish({ entryId: res.sys.id }, rawData);
+  await CMA_CLIENT.entry.delete({ entryId });
+  return entryId;
 };
 
 export const TodoQuery = {

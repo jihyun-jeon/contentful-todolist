@@ -60,11 +60,11 @@ export const useUpdateIsDone = () => {
 export const useDeleteTodo = () => {
   return useMutation({
     mutationFn: (entryId: string) => {
-      return deleteTodo(entryId); // mutationFn 함수는 프로미스를 반환해야 한다.
+      return deleteTodo(entryId); // mutationFn은 비동기 작업을 처리하는 함수인데, 프로미스를 반환한다. return 프로미스
     },
-    onSuccess: (res) => {
+    onSuccess: (entryId) => {
       queryClient.invalidateQueries({ queryKey: TodoQuery.root });
-      queryClient.removeQueries({ queryKey: TodoQuery.getOne(res.sys.id) });
+      queryClient.removeQueries({ queryKey: TodoQuery.getOne(entryId) });
     },
   });
 };
