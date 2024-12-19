@@ -1,5 +1,9 @@
 function Form() {
-  return <div>FormUI</div>;
+  return (
+    <div>
+      FormUI <button>Post</button>
+    </div>
+  );
 }
 
 export default Form;
