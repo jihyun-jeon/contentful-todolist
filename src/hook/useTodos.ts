@@ -41,19 +41,17 @@ export const useGetTodo = (entryId: string) => {
 // <PUT - 완료여부 수정>
 export const useUpdateIsDone = () => {
   return useMutation({
-    mutationFn: async ({
+    mutationFn: ({
       entryId,
       isChecked,
     }: {
       entryId: string;
       isChecked: boolean;
     }) => {
-      // [질문] 왜 TodoList 컴포넌트에서 get요청 후 patch 요청 따로 커스텀훅으로 처리 하는건 오류가 났는지? / 개선 : get-patch 한번에 처리
-      const res = await getTodo(entryId);
-      await patchTodo(entryId, res.sys.version, isChecked);
+      return patchTodo(entryId, isChecked);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: TodoQuery.all });
+      queryClient.invalidateQueries({ queryKey: TodoQuery.root });
     },
   });
 };
@@ -62,10 +60,11 @@ export const useUpdateIsDone = () => {
 export const useDeleteTodo = () => {
   return useMutation({
     mutationFn: (entryId: string) => {
-      return deleteTodo(entryId);
+      return deleteTodo(entryId); // mutationFn은 비동기 작업을 처리하는 함수인데, 프로미스를 반환한다. return 프로미스
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: TodoQuery.all });
+    onSuccess: (entryId) => {
+      queryClient.invalidateQueries({ queryKey: TodoQuery.root });
+      queryClient.removeQueries({ queryKey: TodoQuery.getOne(entryId) });
     },
   });
 };
@@ -73,11 +72,11 @@ export const useDeleteTodo = () => {
 // < POST - todo등록 >
 export const useAddTodo = () => {
   return useMutation({
-    mutationFn: async (data: createTodoType) => {
-      await postTodo(data);
+    mutationFn: (data: createTodoType) => {
+      return postTodo(data);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: TodoQuery.all });
+      queryClient.invalidateQueries({ queryKey: TodoQuery.root });
     },
   });
 };

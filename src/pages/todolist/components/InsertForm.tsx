@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useAddTodo } from "../../../hook/useTodos";
 import { useAuth } from "../../auth/AuthGuard";
-import { Navigate } from "react-router-dom";
 
 const INIT_FORMDATA = { title: "", content: "" };
 
@@ -9,15 +8,7 @@ function InsertForm() {
   const [formData, setFormData] = useState(INIT_FORMDATA);
   const { mutate: addTodoMutate } = useAddTodo();
 
-  const { checkAuth, isAuthenticated, userId } = useAuth();
-
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
-
-  if (!isAuthenticated) {
-    return <Navigate to="/" replace={true} />;
-  }
+  const { userId } = useAuth();
 
   const onInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -25,6 +16,10 @@ function InsertForm() {
   };
 
   const onCreateTodo = () => {
+    if (!userId) {
+      return;
+    }
+
     return addTodoMutate(
       {
         fields: {

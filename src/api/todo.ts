@@ -27,19 +27,18 @@ export const postTodo = async (formData: createTodoType) => {
     fields: res.fields,
   };
 
-  await CMA_CLIENT.entry.publish({ entryId: res.sys.id }, rawData);
+  return CMA_CLIENT.entry.publish({ entryId: res.sys.id }, rawData);
+  // 단순히 Promise를 반환하는 거여서 await가 불필요,  await 뒤에 기다렸다 실행되야하는 로직이 없어서 더욱이 불필요
 };
 
 //  <4. 완료여부 변경 fetcher 분리>
-export const patchTodo = async (
-  entryId: string,
-  version: number,
-  isChecked: boolean
-) => {
+export const patchTodo = async (entryId: string, isChecked: boolean) => {
+  const entry = await getTodo(entryId);
+
   const res = await CMA_CLIENT.entry.patch(
     {
       entryId,
-      version,
+      version: entry.sys.version,
     },
     [
       {
@@ -55,24 +54,22 @@ export const patchTodo = async (
     fields: res.fields,
   };
 
-  await CMA_CLIENT.entry.publish({ entryId: res.sys.id }, rawData);
+  return CMA_CLIENT.entry.publish({ entryId: res.sys.id }, rawData);
 };
 
 //  <5. todo 삭제 fetcher>
 export const deleteTodo = async (entryId: string) => {
   await CMA_CLIENT.entry.unpublish({ entryId });
-  const res = await CMA_CLIENT.entry.delete({ entryId });
-
-  const rawData = {
-    sys: res.sys,
-    fields: res.fields,
-  };
-
-  await CMA_CLIENT.entry.publish({ entryId: res.sys.id }, rawData);
+  await CMA_CLIENT.entry.delete({ entryId });
+  return entryId;
 };
 
 export const TodoQuery = {
-  all: ["todo"],
-  getMany: (todoQuery: getUserListType) => [...TodoQuery.all, todoQuery],
-  // getOne: (todo: unknown) => [...TodoQuery.all, todo],
+  root: ["todo"],
+  getMany: (todoQuery: getUserListType) => [
+    ...TodoQuery.root,
+    "getMany",
+    todoQuery,
+  ],
+  getOne: (id: string) => [...TodoQuery.root, "getOne", id],
 };
